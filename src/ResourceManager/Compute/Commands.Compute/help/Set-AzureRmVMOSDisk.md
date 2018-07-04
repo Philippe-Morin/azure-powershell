@@ -117,6 +117,17 @@ PS C:> New-AzureRmVM -VM $VirtualMachine -ResouceGroupName " ResourceGroup11"
 
 This example sets the disk encryption settings on a virtual machine operating system disk.
 
+### Example 5: Sets properties on a virtual machine from generalized user image using managed disks
+```
+PS C:\> $AvailabilitySet = Get-AzureRmAvailabilitySet -ResourceGroupName "ResourceGroup11" -Name "AvailabilitySet13" 
+PS C:\> $VirtualMachine = New-AzureRmVMConfig -VMName "VirtualMachine17" -VMSize "Standard_A1"
+PS C:\> $VirtualMachine = Set-AzureRmVMOperatingSystem -VM $VirtualMachine -Linux -ComputerName "MainComputer" -Credential (Get-Credential)
+PS C:\> $VirtualMachine = Set-AzureRmVMSourceImage -VM $VirtualMachine -id "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/myresourcegroup/providers/Microsoft.Compute/images/myOSImage"
+PS C:\> $VirtualMachine = Set-AzureRmVMOSDisk -VM $VirtualMachine -Name "osDisk" -StorageAccountType Standard_LRS -DiskSizeInGB 128 -CreateOption fromImage -Linux
+PS C:> New-AzureRmVM -VM $VirtualMachine -ResouceGroupName "ResourceGroup11"
+```
+Note how creating a VM using a managed disk image is different than from a VHD. Instead of specifying the source URI in the Set-AzureRmVMOSDisk cmdlet, you set it using the Set-AzureRmVMSourceImage cmdlet.
+
 ## PARAMETERS
 
 ### -Caching
